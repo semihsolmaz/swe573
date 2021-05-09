@@ -1,0 +1,38 @@
+{% extends 'tagpubDev/base.html' %}
+
+
+{% block body_block %}
+<h1>requests are here</h1>
+
+
+    {% if registration_requests %}
+
+    <table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Request Text</th>
+        <th>Date</th>
+        <th>-</th>
+{#        <th>-</th>#}
+
+    </tr>
+    {% for item in registration_requests %}
+    <tr>
+        <td>{{ item.id }}</td>
+        <td>{{ item.name }} {{ item.surname }}</td>
+        <td>{{ item.applicationText }}</td>
+        <td>{{ item.applicationDate }}</td>
+        <td>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="{{item.id}}" name="request_id">
+                <input type="Submit"></button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+    {% endif %}
+{% endblock %}

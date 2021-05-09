@@ -1,0 +1,10 @@
+{% extends 'tagpubDev/base.html' %}
+
+{% block body_block %}
+<h1>register stuff here</h1>
+    <form enctype="multipart/form-data" method="POST">
+          {% csrf_token %}
+          {{ registration_form.as_p }}
+          <input type="submit" name="" value="Register">
+        </form>
+{% endblock %}
