@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django_tables2',
     'tagpubDev',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,6 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
+    'background_task',
+    'tsvector_field',
+    'django_tables2',
 ]
 
 MIDDLEWARE = [
