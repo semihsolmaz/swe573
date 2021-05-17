@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from tagpubDev.views import index, user_logout
+from tagpubDev.views import index, userLogout
 
 
 urlpatterns = [
     path('', index, name='home'),
     path('tagpub/', include('tagpubDev.urls')),
     path('admin/', admin.site.urls),
-    path('logout/', user_logout, name='logout'),
+    path('logout/', userLogout, name='logout'),
 ]

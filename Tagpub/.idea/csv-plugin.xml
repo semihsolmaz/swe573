@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\templates\tagpubDev\registration.html">
+          <value>
+            <Attribute>
+              <option name="separator" value="|" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\templates\tagpubDev\registrationRequests.html">
           <value>
             <Attribute>

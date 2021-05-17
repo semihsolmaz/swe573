@@ -5,12 +5,17 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 from tagpubDev.forms import ApplicationRegistrationForm
-from tagpubDev.models import RegistrationApplication, UserProfileInfo, User
+from tagpubDev.models import RegistrationApplication, UserProfileInfo, User, Article, Author
 # Create your views here.
 
 
 def index(request):
-    return render(request, 'tagpubDev/index.html')
+    if request.method == 'POST':
+        results_list = Article.objects.filter(PMID__startswith='3394')
+        results_dict = {"results_list": results_list}
+        return render(request, 'tagpubDev/searchResults.html', context=results_dict)
+    else:
+        return render(request, 'tagpubDev/index.html')
 
 
 def registration(request):
@@ -53,7 +58,7 @@ def registrationRequests(request):
     return render(request, 'tagpubDev/registrationRequests.html', context=requests_dict)
 
 
-def user_login(request):
+def userLogin(request):
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -76,6 +81,22 @@ def user_login(request):
 
 
 @login_required
-def user_logout(request):
+def userLogout(request):
     logout(request)
     return HttpResponseRedirect(reverse('tagpubDev:index'))
+
+
+def articleDetail(request, pk):
+    article = Article.objects.get(pk=pk)
+    if request.method == 'POST':
+        # todo: add tag
+        pass
+    else:
+        authors = Author.objects.filter(article=article)
+        article_dict = {"authors": authors,
+                        "title": article.Title,
+                        "abstract": article.Abstract,
+                        "pmid": article.PMID
+                        }
+        return render(request, 'tagpubDev/articleDetail.html', context=article_dict)
+

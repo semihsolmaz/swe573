@@ -1,10 +1,23 @@
 {% extends 'tagpubDev/base.html' %}
 
 {% block body_block %}
-<h1>register stuff here</h1>
-    <form enctype="multipart/form-data" method="POST">
-          {% csrf_token %}
-          {{ registration_form.as_p }}
-          <input type="submit" name="" value="Register">
-        </form>
+    {% load crispy_forms_tags %}
+
+    <div class="container text-center">
+    <h3>Fill-out the form to register</h3>
+  <div class="row">
+    <div class="col-md"></div>
+    <div class="col-md">
+        <form method="post">
+            {% csrf_token %}
+          {{ registration_form|crispy }}
+          <input class="register-button" type="submit" name="" value="Register">
+    </form>
+    </div>
+    <div class="col-md"></div>
+  </div>
+</div>
+
+
+
 {% endblock %}

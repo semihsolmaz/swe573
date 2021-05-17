@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'background_task',
     'tsvector_field',
     'django_tables2',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -134,4 +135,6 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_URL = '/tagpubDev/user_login/'
+LOGIN_URL = '/tagpubDev/userLogin/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

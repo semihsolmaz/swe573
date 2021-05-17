@@ -5,6 +5,10 @@
     display: none;
 }
 
+.register-button{
+    margin: 10px;
+}
+
 #tagInput{
     width: 300px;
 }

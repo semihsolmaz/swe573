@@ -134,22 +134,22 @@ class ArticleInfo:
     # def getArticleMetrics:
     # https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pubmed&linkname=pubmed_pubmed_citedin&id=21876726&id=21876761
 
-Entrez.api_key = '2ed33cae73fa40c55df3b96dc4e7f6598209'
-Entrez.email = "semihsolmaz@hotmail.com"
-
-search_handle = Entrez.esearch(db="pubmed", term="flu", retmax=15)
-record = Entrez.read(search_handle)
-search_handle.close()
-id_list = record["IdList"]
-
-article_handle = Entrez.efetch(db="pubmed", id=id_list, retmode="xml", rettype="abstract")
-articles_xml = article_handle.read()
-articles = xmltodict.parse(articles_xml)
-articles_list = articles.get('PubmedArticleSet').get('PubmedArticle')
-article_handle.close()
-
-art = ArticleInfo(articles_list[0])
-print(art.getKeywords())
+# Entrez.api_key = '2ed33cae73fa40c55df3b96dc4e7f6598209'
+# Entrez.email = "semihsolmaz@hotmail.com"
+#
+# search_handle = Entrez.esearch(db="pubmed", term="flu", retmax=15)
+# record = Entrez.read(search_handle)
+# search_handle.close()
+# id_list = record["IdList"]
+#
+# article_handle = Entrez.efetch(db="pubmed", id=id_list, retmode="xml", rettype="abstract")
+# articles_xml = article_handle.read()
+# articles = xmltodict.parse(articles_xml)
+# articles_list = articles.get('PubmedArticleSet').get('PubmedArticle')
+# article_handle.close()
+#
+# art = ArticleInfo(articles_list[0])
+# print(art.getKeywords())
 
 
 

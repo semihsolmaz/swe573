@@ -32,7 +32,7 @@
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Fourth navbar example">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">TagPub</a>
+        <a class="navbar-brand" href="{% url 'tagpubDev:index' %}">TagPub</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -40,18 +40,25 @@
         <div class="collapse navbar-collapse" id="navbarsExample04">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'tagpubDev:index' %}">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="tagsList.html">Tags</a>
             </li>
-              <li>
+
                   {% if user.is_authenticated %}
+                      <li>
                 <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                      </li>
                   {% else %}
+                      <li>
                 <a class="nav-link" href="{% url 'tagpubDev:user_login' %}">Login</a>
+                       </li>
+                      <li>
+                <a class="nav-link" href="{% url 'tagpubDev:registration' %}">Register</a>
+                       </li>
                   {% endif %}
-              </li>
+
             <!--                <li class="nav-item dropdown">-->
             <!--                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>-->
             <!--                    <ul class="dropdown-menu" aria-labelledby="dropdown04">-->
@@ -73,7 +80,7 @@
       {% endblock %}
     <footer class="mastfoot mt-auto text-center py-4">
       <div class="inner">
-        <p>Pubmed Artice tagging application by Semih Solmaz</p>
+        <p>Pubmed Article tagging application by Semih Solmaz <span class="mt-5 mb-3 text-muted">© 2021</span></p>
       </div>
     </footer>
 

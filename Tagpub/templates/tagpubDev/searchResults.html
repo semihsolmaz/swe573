@@ -1,0 +1,28 @@
+{% extends 'tagpubDev/base.html' %}
+
+{% block body_block %}
+
+    <h3 class="lead">Search Results</h3>
+
+    <div class="container">
+        <h3 class="lead">Search Results</h3>
+        <table class="table table-striped">
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Authors</th>
+                <th>Date</th>
+
+            </tr>
+            {% for item in results_list %}
+                <tr>
+                    <td><a href="{% url 'tagpubDev:articleDetail' item.id %}">{{ item.id }}</a></td>
+                    <td>{{ item.Title }}</td>
+                    <td>{{ item.Authors }}</td>
+                    <td>{{ item.PublicationDate }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}
