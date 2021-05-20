@@ -1,3 +1,4 @@
+from django.db.utils import IntegrityError
 from Bio import Entrez
 import xmltodict
 from tagpubDev.articleManager import ArticleInfo
@@ -10,7 +11,7 @@ def createArticles():
     Entrez.api_key = '2ed33cae73fa40c55df3b96dc4e7f6598209'
     Entrez.email = "semihsolmaz@hotmail.com"
 
-    search_handle = Entrez.esearch(db="pubmed", term="flu", retmax=100)
+    search_handle = Entrez.esearch(db="pubmed", term="corona", retmax=1000)
     record = Entrez.read(search_handle)
     search_handle.close()
     id_list = record["IdList"]
@@ -50,12 +51,18 @@ def createArticles():
             Tokens=article_info.getTokens()
         )
 
-        article.save()
+        try:
+            article.save()
 
-        article.createTSvector()
+            article.createTSvector()
 
-        if author_list:
-            article.Authors.add(*author_list)
+            if author_list:
+                article.Authors.add(*author_list)
 
-        article.Keywords.add(*keywords_list)
+            if keywords_list:
+                article.Keywords.add(*keywords_list)
+        except IntegrityError:
+            print('Article cant be saved')
+            pass
+
 

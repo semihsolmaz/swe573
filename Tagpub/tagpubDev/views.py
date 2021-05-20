@@ -1,17 +1,20 @@
+from functools import reduce
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.postgres.search import SearchQuery
 from tagpubDev.forms import ApplicationRegistrationForm
 from tagpubDev.models import RegistrationApplication, UserProfileInfo, User, Article, Author
-# Create your views here.
 
 
 def index(request):
     if request.method == 'POST':
-        results_list = Article.objects.filter(PMID__startswith='3394')
+        search_terms = [SearchQuery(term, ) for term in request.POST.get('searchTerms').split(",")]
+        search_query = reduce(lambda x, y: x & y, search_terms)
+
+        results_list = Article.objects.filter(SearchIndex=search_query)
         results_dict = {"results_list": results_list}
         return render(request, 'tagpubDev/searchResults.html', context=results_dict)
     else:

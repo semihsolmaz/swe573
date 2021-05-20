@@ -1,7 +1,5 @@
 from datetime import datetime
 from collections.abc import Mapping
-from Bio import Entrez
-import xmltodict
 
 
 class ArticleInfo:
@@ -60,8 +58,10 @@ class ArticleInfo:
                 for item in abstract_info:
                     if type(item) is str:
                         abstract_text += item + '\n'
-                    else:
+                    elif item.get('@Label'):
                         abstract_text += item.get('@Label') + '\n' + item.get('#text') + '\n'
+                    else:
+                        abstract_text += item.get('#text') + '\n'
                 return abstract_text
             else:
                 return abstract_info['#text']
@@ -95,7 +95,12 @@ class ArticleInfo:
         keywords = []
         if keywords_data:
             for keyword in keywords_data.get('Keyword'):
-                keywords.append(keyword.get('#text'))
+                if type(keyword) is str:
+                    keywords.append(keyword)
+                elif keyword.get('#text'):
+                    keywords.append(keyword.get('#text'))
+                else:
+                    pass
         else:
             keywords = None
         return keywords

@@ -37,9 +37,9 @@ class UserProfileInfo(models.Model):
 
 class Journal(models.Model):
 
-    ISSN = models.TextField(max_length=16)
-    Title = models.TextField(max_length=256)
-    ISOAbbreviation = models.TextField(max_length=256)
+    ISSN = models.CharField(max_length=16)
+    Title = models.CharField(max_length=256)
+    ISOAbbreviation = models.CharField(max_length=256)
 
     def __str__(self):
         return self.Title
@@ -47,9 +47,9 @@ class Journal(models.Model):
 
 class Author(models.Model):
 
-    LastName = models.TextField(max_length=32)
-    ForeName = models.TextField(max_length=32)
-    Initials = models.TextField(max_length=8)
+    LastName = models.CharField(max_length=32)
+    ForeName = models.CharField(max_length=32)
+    Initials = models.CharField(max_length=8)
 
     def __str__(self):
         return self.ForeName + ' ' + self.LastName
@@ -65,8 +65,8 @@ class Keyword(models.Model):
 
 class Article(models.Model):
 
-    PMID = models.TextField(max_length=16)
-    Title = models.TextField(max_length=256)
+    PMID = models.CharField(max_length=16)
+    Title = models.CharField(max_length=256)
     Abstract = models.TextField(max_length=5000, null=True)
     PublicationDate = models.DateField(null=True)
 
@@ -106,3 +106,17 @@ class Article(models.Model):
         return self.Title
 
 
+class Tag(models.Model):
+    Label = models.CharField(max_length=64)
+    Description = models.TextField(max_length=1024)
+    # Maybe an array field for tokens?
+    Tokens = models.TextField(max_length=1024)
+    SearchIndex = SearchVectorField(null=True)
+
+    def createTSvector(self, *args, **kwargs):
+        self.SearchIndex = (
+                SearchVector('Label', weight='A')
+                + SearchVector('Tokens', weight='B')
+                + SearchVector('Description', weight='C')
+        )
+        super().save(*args, **kwargs)
