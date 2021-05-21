@@ -1,12 +1,14 @@
 from functools import reduce
+from dal import autocomplete
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import SearchQuery
-from tagpubDev.forms import ApplicationRegistrationForm
+from tagpubDev.forms import ApplicationRegistrationForm, TagForm
 from tagpubDev.models import RegistrationApplication, UserProfileInfo, User, Article, Author
+from tagpubDev.wikiManager import getLabelSuggestion
 
 
 def index(request):
@@ -103,3 +105,32 @@ def articleDetail(request, pk):
                         }
         return render(request, 'tagpubDev/articleDetail.html', context=article_dict)
 
+
+def tag_autocomplete(request):
+    if request.is_ajax():
+        # wiki_query = request.GET.get('tag_query', '')
+        tags = ['kamil', 'kazım', 'manda']
+        data = {
+            'tags': tags,
+        }
+    return JsonResponse(data)
+
+
+class TagAutocomplete(autocomplete.Select2ListView):
+
+    def get_list(self):
+        taglist = getLabelSuggestion(self.q)
+        return taglist
+
+
+def tagsList(request):
+    if request.method == 'POST':
+        tag_form = TagForm(data=request.POST)
+        print(tag_form.data['wikiLabel'])
+        if tag_form.data['wikiLabel']:
+            return HttpResponse(tag_form.data['wikiLabel'])
+    else:
+        tag_form = TagForm()
+
+    return render(request, 'tagpubDev/tagList.html',
+                  {'tag_form': tag_form})

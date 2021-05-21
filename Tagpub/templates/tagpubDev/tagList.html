@@ -1,0 +1,47 @@
+{% extends 'tagpubDev/base.html' %}
+{# Don't forget that one ! #}
+{% load static %}
+
+{% block body_block %}
+
+
+    <div class="container text-center">
+        <h3>Fill-out the form to register</h3>
+        <div class="row">
+            <div class="col-md"></div>
+            <div class="col-md form-div">
+                <form class="form_div" method="post">
+                    {% csrf_token %}
+                    {{ tag_form }}
+                    <input class="register-button" type="submit" name="" value="Register">
+                </form>
+            </div>
+            <div class="col-md"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+
+    {{ tag_form.media }}
+
+    <script>
+        (function ($) {
+            $('#add-form').click(function () {
+                var index = $('#id_inline_test_models-TOTAL_FORMS').val()
+                var newTable = $('#id_inline_test_models-__prefix__-DELETE').parents('table').clone()
+                newTable.find(':input').each(function () {
+                    for (attr of ['name', 'id'])
+                        $(this).attr(
+                            attr,
+                            $(this).attr(attr).replace('__prefix__', index)
+                        )
+                })
+                newTable.insertBefore($(this))
+                $('#id_inline_test_models-TOTAL_FORMS').val(
+                    parseInt($('#id_inline_test_models-TOTAL_FORMS').val()) + 1
+                )
+                newTable.slideDown()
+            })
+        })($)
+    </script>
+{% endblock %}

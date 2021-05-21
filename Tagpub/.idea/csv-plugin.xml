@@ -10,6 +10,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\tagpubDev\views.py">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\tagpubDev\wikiManager.py">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\templates\tagpubDev\registration.html">
           <value>
             <Attribute>
