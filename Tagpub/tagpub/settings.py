@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'tsvector_field',
     'django_tables2',
     'crispy_forms',
+    'dal',
+    'dal_select2',
 ]
 
 MIDDLEWARE = [

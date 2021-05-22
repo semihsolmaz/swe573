@@ -6,10 +6,6 @@ function checkEnter(e){
 }
 document.querySelector('.noEnter').onkeypress = checkEnter;
 
-function myFunction() {
-    $('#description').val('disease caused by infection of pathogenic biological agents in a host organism');
-    $('#label').val('infectious disease');
-}
 
 $(document).ready(function () {
     $("#basicSearchButton").click(function () {

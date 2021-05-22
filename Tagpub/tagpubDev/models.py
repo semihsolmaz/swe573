@@ -108,7 +108,7 @@ class Article(models.Model):
 
 class Tag(models.Model):
     Label = models.CharField(max_length=64)
-    Description = models.TextField(max_length=1024)
+    Description = models.TextField(max_length=1024, null=True)
     # Maybe an array field for tokens?
     Tokens = models.TextField(max_length=1024)
     SearchIndex = SearchVectorField(null=True)

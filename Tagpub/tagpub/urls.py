@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from tagpubDev.views import index, userLogout
+from tagpubDev.views import index, userLogout, TagAutocomplete
 
 
 urlpatterns = [
@@ -23,4 +23,5 @@ urlpatterns = [
     path('tagpub/', include('tagpubDev.urls')),
     path('admin/', admin.site.urls),
     path('logout/', userLogout, name='logout'),
+    path('tag-autocomplete/', TagAutocomplete.as_view(), name='tag-autocomplete'),
 ]
