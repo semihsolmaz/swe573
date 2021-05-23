@@ -7,19 +7,15 @@ FROM python:3
 ENV PYTHONUNBUFFERED 1
 
 # create root directory for our project in the container
-RUN mkdir /tagpub
+RUN mkdir /Tagpub
 
 # Set the working directory to /tagpub
-WORKDIR /tagpub
-
-RUN cd Tagpub/
+WORKDIR /Tagpub
 
 RUN ls
 
 # Copy the current directory contents into the container at /tagpub
 ADD . /tagpub/
-
-RUN ls /tagpub/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
