@@ -31,4 +31,6 @@ jobs:
         image: ghcr.io/semihsolmaz/tagpubweb
         registry: ghcr.io
         username: ${{ secrets.REGISTRY_USER }}
-        password: ${{ secrets.REGISTRY_TOKEN }} 
+        password: ${{ secrets.REGISTRY_TOKEN }}
+        dockerfile: ./Tagpub/Dockerfile
+        directory: ./Tagpub
