@@ -33,4 +33,3 @@ jobs:
         username: ${{ secrets.REGISTRY_USER }}
         password: ${{ secrets.REGISTRY_TOKEN }}
         dockerfile: ./Tagpub/Dockerfile
-        directory: ./Tagpub
