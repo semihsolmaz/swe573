@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from django.contrib.postgres.fields import ArrayField
+# from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.search import SearchVectorField, SearchVector
 # import tsvector_field
 # Create your models here.
@@ -47,8 +47,8 @@ class Journal(models.Model):
 
 class Author(models.Model):
 
-    LastName = models.CharField(max_length=32)
-    ForeName = models.CharField(max_length=32)
+    LastName = models.CharField(max_length=128)
+    ForeName = models.CharField(max_length=128)
     Initials = models.CharField(max_length=8)
 
     def __str__(self):
@@ -82,7 +82,7 @@ class Tag(models.Model):
 class Article(models.Model):
 
     PMID = models.CharField(max_length=16)
-    Title = models.CharField(max_length=256)
+    Title = models.TextField(max_length=512)
     Abstract = models.TextField(max_length=5000, null=True)
     PublicationDate = models.DateField(null=True)
 

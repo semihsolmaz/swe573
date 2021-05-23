@@ -3,20 +3,27 @@ from Bio import Entrez
 import xmltodict
 from tagpubDev.articleManager import ArticleInfo
 from tagpubDev.models import Journal, Author, Article, Keyword
-from background_task import background
+# from background_task import background
 
 
-# @background(schedule=10)
-def createArticles():
+# @background(schedule=60)
+def createArticles(term, max_article):
     Entrez.api_key = '2ed33cae73fa40c55df3b96dc4e7f6598209'
     Entrez.email = "semihsolmaz@hotmail.com"
 
-    search_handle = Entrez.esearch(db="pubmed", term="corona", retmax=1000)
+    search_handle = Entrez.esearch(db="pubmed", term=term, retmax=max_article)
     record = Entrez.read(search_handle)
     search_handle.close()
     id_list = record["IdList"]
 
-    article_handle = Entrez.efetch(db="pubmed", id=id_list, retmode="xml", rettype="abstract")
+    # Compare with current list
+    existing_articles = list(Article.objects.values_list('PMID', flat=True).distinct())
+    articles_to_save = list(set(id_list) - set(existing_articles))
+
+    print(str(len(articles_to_save)) + 'articles will be fetched')
+    save_counter = 0
+
+    article_handle = Entrez.efetch(db="pubmed", id=articles_to_save, retmode="xml", rettype="abstract")
     articles_xml = article_handle.read()
     articles = xmltodict.parse(articles_xml)
     articles_list = articles.get('PubmedArticleSet').get('PubmedArticle')
@@ -25,44 +32,49 @@ def createArticles():
     for item in articles_list:
 
         article_info = ArticleInfo(item)
+        if article_info.getPMID():
+            if article_info.getJournal():
+                journal = Journal.objects.get_or_create(**article_info.getJournal())[0]
+            else:
+                journal = None
 
-        if article_info.getJournal():
-            journal = Journal.objects.get_or_create(**article_info.getJournal())[0]
+            keywords_list = []
+            if article_info.getKeywords():
+                for element in article_info.getKeywords():
+                    keyword = Keyword.objects.get_or_create(KeywordText=element)
+                    keywords_list.append(keyword[0])
+
+            author_list = []
+            for record in article_info.getAuthors():
+                author = Author.objects.get_or_create(**record)
+                author_list.append(author[0])
+
+            article = Article(
+                PMID=article_info.getPMID(),
+                Title=article_info.getTitle(),
+                Abstract=article_info.getAbstract(),
+                PublicationDate=article_info.getPublicationDate(),
+                Journal=journal,
+                Tokens=article_info.getTokens()
+            )
+
+            try:
+                article.save()
+
+                article.createTSvector()
+
+                if author_list:
+                    article.Authors.add(*author_list)
+
+                if keywords_list:
+                    article.Keywords.add(*keywords_list)
+                print('article ' + article.PMID + ' saved.')
+                save_counter = save_counter + 1
+            except IntegrityError:
+                print('Article cant be saved')
+                pass
         else:
-            journal = None
-
-        keywords_list = []
-        if article_info.getKeywords():
-            for element in article_info.getKeywords():
-                keyword = Keyword.objects.get_or_create(KeywordText=element)
-                keywords_list.append(keyword[0])
-
-        author_list = []
-        for record in article_info.getAuthors():
-            author = Author.objects.get_or_create(**record)
-            author_list.append(author[0])
-
-        article = Article(
-            PMID=article_info.getPMID(),
-            Title=article_info.getTitle(),
-            Abstract=article_info.getAbstract(),
-            PublicationDate=article_info.getPublicationDate(),
-            Journal=journal,
-            Tokens=article_info.getTokens()
-        )
-
-        try:
-            article.save()
-
-            article.createTSvector()
-
-            if author_list:
-                article.Authors.add(*author_list)
-
-            if keywords_list:
-                article.Keywords.add(*keywords_list)
-        except IntegrityError:
             print('Article cant be saved')
             pass
 
-
+    print(str(save_counter) + ' articles saved')

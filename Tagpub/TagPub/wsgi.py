@@ -13,8 +13,8 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'TagPub.settings')
 
-# from tagpubDev.fetchArticles import createArticles
-#
-# createArticles()
+from tagpubDev.fetchArticles import createArticles
+
+createArticles('flu', '5000')
 
 application = get_wsgi_application()

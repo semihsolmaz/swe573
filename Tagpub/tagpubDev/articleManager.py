@@ -58,13 +58,17 @@ class ArticleInfo:
                 for item in abstract_info:
                     if type(item) is str:
                         abstract_text += item + '\n'
-                    elif item.get('@Label'):
+                    elif item.get('@Label') and item.get('#text'):
                         abstract_text += item.get('@Label') + '\n' + item.get('#text') + '\n'
-                    else:
+                    elif item.get('#text'):
                         abstract_text += item.get('#text') + '\n'
+                    else:
+                        pass
                 return abstract_text
+            elif abstract_info:
+                return abstract_info.get('#text')
             else:
-                return abstract_info['#text']
+                return None
         else:
             return None
 
@@ -86,7 +90,6 @@ class ArticleInfo:
                         }
                         authors_dict_list.append(author_dict)
                 except AttributeError:
-                    print('No author info')
                     pass
         return authors_dict_list
 
@@ -106,7 +109,10 @@ class ArticleInfo:
         return keywords
 
     def getPMID(self):
-        pmid = self.article_dict.get('MedlineCitation').get('PMID').get('#text')
+        if self.article_dict.get('MedlineCitation').get('PMID'):
+            pmid = self.article_dict.get('MedlineCitation').get('PMID').get('#text')
+        else:
+            pmid = None
         return pmid
 
     def getTokens(self):
@@ -139,22 +145,6 @@ class ArticleInfo:
     # def getArticleMetrics:
     # https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pubmed&linkname=pubmed_pubmed_citedin&id=21876726&id=21876761
 
-# Entrez.api_key = '2ed33cae73fa40c55df3b96dc4e7f6598209'
-# Entrez.email = "semihsolmaz@hotmail.com"
-#
-# search_handle = Entrez.esearch(db="pubmed", term="flu", retmax=15)
-# record = Entrez.read(search_handle)
-# search_handle.close()
-# id_list = record["IdList"]
-#
-# article_handle = Entrez.efetch(db="pubmed", id=id_list, retmode="xml", rettype="abstract")
-# articles_xml = article_handle.read()
-# articles = xmltodict.parse(articles_xml)
-# articles_list = articles.get('PubmedArticleSet').get('PubmedArticle')
-# article_handle.close()
-#
-# art = ArticleInfo(articles_list[0])
-# print(art.getKeywords())
 
 
 
