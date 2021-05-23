@@ -13,7 +13,7 @@ RUN mkdir /tagpub
 WORKDIR /tagpub
 
 # Copy the current directory contents into the container at /music_service
-ADD . /tagpub/
+ADD ./TagPub /tagpub/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
