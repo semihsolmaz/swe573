@@ -9,10 +9,10 @@ ENV PYTHONUNBUFFERED 1
 # create root directory for our project in the container
 RUN mkdir /Tagpub
 
-# Set the working directory to /tagpub
+# Set the working directory to /TagPub
 WORKDIR /Tagpub
 
-# Copy the current directory contents into the container at /tagpub
+# Copy the current directory contents into the container at /TagPub
 ADD . /Tagpub/
 
 # Install any needed packages specified in requirements.txt
