@@ -9,11 +9,15 @@ ENV PYTHONUNBUFFERED 1
 # create root directory for our project in the container
 RUN mkdir /tagpub
 
-# Set the working directory to /music_service
+# Set the working directory to /tagpub
 WORKDIR /tagpub
 
-# Copy the current directory contents into the container at /music_service
-ADD Tagpub/ /tagpub/
+RUN cd Tagpub/
+
+RUN ls
+
+# Copy the current directory contents into the container at /tagpub
+ADD . /tagpub/
 
 RUN ls /tagpub/
 
