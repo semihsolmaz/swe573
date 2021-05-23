@@ -12,10 +12,8 @@ RUN mkdir /Tagpub
 # Set the working directory to /tagpub
 WORKDIR /Tagpub
 
-RUN ls
-
 # Copy the current directory contents into the container at /tagpub
-ADD . /tagpub/
+ADD . /Tagpub/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
