@@ -28,7 +28,7 @@ jobs:
     - uses: mr-smithers-excellent/docker-build-push@v5
       name: Build & push Docker image
       with:
-        image: ghcr.io/semihsolmaz/tagpubweb
+        image: tagpubweb
         registry: ghcr.io
         username: ${{ secrets.REGISTRY_USER }}
         password: ${{ secrets.REGISTRY_TOKEN }}
