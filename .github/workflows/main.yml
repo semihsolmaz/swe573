@@ -23,9 +23,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      - name: Build the Docker image
-        run: |
-          docker login ghcr.io -u "${{ secrets.REGISTRY_USER }}" -p "${{ secrets.REGISTRY_TOKEN }}"
-          docker build . --file Dockerfile --tag ${{ secrets.DOCKER_HUB_USERNAME }}/tagpubweb:$GITHUB_SHA
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/tagpubweb:$GITHUB_SHA
+      uses: mr-smithers-excellent/docker-build-push@v5
+      with:
+        image: tagpubweb
+        registry: ghcr.io
+        username: ${{ secrets.REGISTRY_USER }}
+        password: ${{ secrets.REGISTRY_TOKEN }}
