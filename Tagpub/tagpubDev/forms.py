@@ -14,6 +14,7 @@ class ApplicationRegistrationForm(forms.ModelForm):
 
 class TagForm(forms.Form):
     wikiLabel = autocomplete.Select2ListChoiceField(
-        widget=autocomplete.ListSelect2(url='tag-autocomplete')
+        widget=autocomplete.ListSelect2(url='tag-autocomplete'),
+        label="Search Wikidata Entry"
     )
 

@@ -1,265 +1,309 @@
 {% extends 'tagpubDev/base.html' %}
-
+{% load static %}
 
 {% block body_block %}
-
+    {% load crispy_forms_tags %}
     <div class="container py-4">
 
-    <div class="p-5 mb-4 bg-light border rounded-3 ">
-        <h3>{{ title }}</h3>
-        <p><span class="fw-bold">Authors: </span>
-             {% for item in authors %}
-                {% if forloop.last %}
-                 {{ item.ForeName }} {{ item.LastName }}
-                 {% else %}
-                 {{ item.ForeName }} {{ item.LastName }},
-                 {% endif %}
-           {% endfor %}
-        </p>
-        <div class="container">
-            <div class="row">
-                <div class="col">PMID: {{ pmid }}</div>
-{#                <div class="col">PMCID: PMC7556779</div>#}
-{#                <div class="col">DOI: 10.1016/j.it.2020.10.004</div>#}
-            </div>
-        </div>
-        <hr>
-        <p class="fw-bold">Abstract</p>
-        <p>{{ abstract }}</p>
-        <p class="fw-bold">Keywords</p>
-        <p>COVID-19; SARS, SARS-CoV-2; coronavirus; severe acute respiratory syndrome.</p>
-        <div class="container-fluid py-4">
-            <form class="tagForm noEnter">
-                <label for="searchField" class="form-label"><span class="fw-bold">Tags: </span></label>
-                <input id="searchField" class="form-control form-control-lg" type="text" value="SARS-CoV-2,infectious disease" data-role="tagsinput" placeholder="add tags" />
-                <button type="submit" class="btn btn-primary d-inline"><i class="fas fa-tags"></i> Save tags</button>
-            </form>
-        </div>
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <a
-                        class="nav-link active"
-                        id="home-tab"
-                        data-mdb-toggle="tab"
-                        href="#home"
-                        role="tab"
-                        aria-controls="home"
-                        aria-selected="true"
-                >References</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a
-                        class="nav-link"
-                        id="profile-tab"
-                        data-mdb-toggle="tab"
-                        href="#profile"
-                        role="tab"
-                        aria-controls="profile"
-                        aria-selected="false"
-                >Similar articles</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a
-                        class="nav-link"
-                        id="messages-tab"
-                        data-mdb-toggle="tab"
-                        href="#messages"
-                        role="tab"
-                        aria-controls="messages"
-                        aria-selected="false"
-                >Cited by</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a
-                        class="nav-link"
-                        id="settings-tab"
-                        data-mdb-toggle="tab"
-                        href="#settings"
-                        role="tab"
-                        aria-controls="settings"
-                        aria-selected="false"
-                >Mesh Terms</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a
-                        class="nav-link"
-                        id="publication-type-tab"
-                        data-mdb-toggle="tab"
-                        href="#settings"
-                        role="tab"
-                        aria-controls="settings"
-                        aria-selected="false"
-                >Publication Types</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a
-                        class="nav-link"
-                        id="grant-tab"
-                        data-mdb-toggle="tab"
-                        href="#settings"
-                        role="tab"
-                        aria-controls="settings"
-                        aria-selected="false"
-                >Grant Support</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a
-                        class="nav-link"
-                        id="grant-tab"
-                        data-mdb-toggle="tab"
-                        href="#settings"
-                        role="tab"
-                        aria-controls="settings"
-                        aria-selected="false"
-                >Activity</a>
-            </li>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <div class="references" id="references">
-                    <div id="top-references-list" class="references-lists-container">
-                        <div class="refs-list">
-                            <ol id="top-references-list-1" class="references-list">
-                                <li>
-                                    <ol class="references-and-notes-list">
-
-                                        <li class="skip-numbering" value="1">
-
-                                            Zhou P. A pneumonia outbreak associated with a new coronavirus of probable bat origin. Nature. 2020;579:270–273.
-                                            -
-                                            <a class="reference-link" href="http://www.ncbi.nlm.nih.gov/pmc/articles/pmc7095418/" ref="linksrc=references_link&amp;ordinalpos=1" data-ga-category="reference" data-ga-action="PMC7095418">
-                                                PMC
-                                            </a>
-                                            -
-                                            <a class="reference-link" href="/32015507/" ref="linksrc=references_link&amp;ordinalpos=2" data-ga-category="reference" data-ga-action="32015507">
-                                                PubMed
-                                            </a>
-                                        </li>
-
-                                    </ol>
-                                </li>
-                                <li>
-                                    <ol class="references-and-notes-list">
-                                        <li class="skip-numbering" value="1">
-                                            Peiris J. Coronavirus as a possible cause of severe acute respiratory syndrome. Lancet. 2003;361:1319–1325.
-                                            -
-                                            <a class="reference-link" href="http://www.ncbi.nlm.nih.gov/pmc/articles/pmc7112372/" ref="linksrc=references_link&amp;ordinalpos=1" data-ga-category="reference" data-ga-action="PMC7112372">
-                                                PMC
-                                            </a>
-                                            -
-                                            <a class="reference-link" href="/12711465/" ref="linksrc=references_link&amp;ordinalpos=2" data-ga-category="reference" data-ga-action="12711465">
-                                                PubMed
-                                            </a>
-                                        </li>
-
-                                    </ol>
-                                </li>
-                                <li>
-                                    <ol class="references-and-notes-list">
-                                        <li class="skip-numbering" value="1">
-                                            Huang C. Clinical features of patients infected with 2019 novel coronavirus in Wuhan, China. Lancet. 2020;395:497–506.
-                                            -
-                                            <a class="reference-link" href="http://www.ncbi.nlm.nih.gov/pmc/articles/pmc7159299/" ref="linksrc=references_link&amp;ordinalpos=1" data-ga-category="reference" data-ga-action="PMC7159299">
-                                                PMC
-                                            </a>
-                                 -
-                                            <a class="reference-link" href="/31986264/" ref="linksrc=references_link&amp;ordinalpos=2" data-ga-category="reference" data-ga-action="31986264">
-                                                PubMed
-                                            </a>
-
-
-
-
-                                        </li>
-
-                                    </ol>
-                                </li>
-
-                                <li>
-                                    <ol class="references-and-notes-list">
-
-                                        <li class="skip-numbering" value="1">
-
-                                            WHO . WHO; 2020. Coronavirus Disease (COVID-19) Pandemic.
-
-
-
-                                            -
-                                            <a class="reference-link" href="http://www.ncbi.nlm.nih.gov/pmc/articles/pmc7306959/" ref="linksrc=references_link&amp;ordinalpos=1" data-ga-category="reference" data-ga-action="PMC7306959">
-                                                PMC
-                                            </a>
-
-
-
-
-
-                                            -
-                                            <a class="reference-link" href="/32582306/" ref="linksrc=references_link&amp;ordinalpos=2" data-ga-category="reference" data-ga-action="32582306">
-                                                PubMed
-                                            </a>
-
-
-
-
-                                        </li>
-
-                                    </ol>
-                                </li>
-
-                                <li>
-                                    <ol class="references-and-notes-list">
-
-                                        <li class="skip-numbering" value="1">
-
-                                            Gorbalenya A.E. The species Severe acute respiratory syndrome-related coronavirus: classifying 2019-nCoV and naming it SARS-CoV-2. Nat. Microbiol. 2020;5:536–544.
-
-
-
-                                            -
-                                            <a class="reference-link" href="http://www.ncbi.nlm.nih.gov/pmc/articles/pmc7095448/" ref="linksrc=references_link&amp;ordinalpos=1" data-ga-category="reference" data-ga-action="PMC7095448">
-                                                PMC
-                                            </a>
-
-
-
-
-
-                                            -
-                                            <a class="reference-link" href="/32123347/" ref="linksrc=references_link&amp;ordinalpos=2" data-ga-category="reference" data-ga-action="32123347">
-                                                PubMed
-                                            </a>
-
-
-
-
-                                        </li>
-
-                                    </ol>
-                                </li>
-
-
-                            </ol>
-
-                        </div>
-
-
-                    </div>
+        <div class="p-5 mb-4 bg-light border rounded-3 ">
+            <h3>{{ title }}</h3>
+            <p><span class="fw-bold">Authors: </span>
+                {% for item in authors %}
+                    {% if forloop.last %}
+                        {{ item.ForeName }} {{ item.LastName }}
+                    {% else %}
+                        {{ item.ForeName }} {{ item.LastName }},
+                    {% endif %}
+                {% endfor %}
+            </p>
+            <div class="container">
+                <div class="row">
+                    <div class="col">PMID: {{ pmid }}</div>
+                    {#                <div class="col">PMCID: PMC7556779</div>#}
+                    {#                <div class="col">DOI: 10.1016/j.it.2020.10.004</div>#}
                 </div>
             </div>
-            <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                ...
+            <hr>
+            <p class="fw-bold">Abstract</p>
+            <p>{{ abstract }}</p>
+            <p class="fw-bold">Keywords</p>
+            <p>COVID-19; SARS, SARS-CoV-2; coronavirus; severe acute respiratory syndrome.</p>
+            <div class="container-fluid py-4">
+                <form class="tagForm" method="post">
+                    {% csrf_token %}
+                    {{ tag_form|crispy }}
+                    <div id="searchHelp" class="form-text">Search for wikidata entry using labels or Q codes</div>
+                    <input class="register-button" type="submit" name="add_tag" value="Add Tag">
+
+                </form>
             </div>
-            <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
-                ...
-            </div>
-            <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-                ...
+
+            <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+
+            {{ tag_form.media }}
+
+            <script>
+                (function ($) {
+                    $('#add-form').click(function () {
+                        var index = $('#id_inline_test_models-TOTAL_FORMS').val()
+                        var newTable = $('#id_inline_test_models-__prefix__-DELETE').parents('table').clone()
+                        newTable.find(':input').each(function () {
+                            for (attr of ['name', 'id'])
+                                $(this).attr(
+                                    attr,
+                                    $(this).attr(attr).replace('__prefix__', index)
+                                )
+                        })
+                        newTable.insertBefore($(this))
+                        $('#id_inline_test_models-TOTAL_FORMS').val(
+                            parseInt($('#id_inline_test_models-TOTAL_FORMS').val()) + 1
+                        )
+                        newTable.slideDown()
+                    })
+                })($)
+            </script>
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a
+                            class="nav-link active"
+                            id="home-tab"
+                            data-mdb-toggle="tab"
+                            href="#home"
+                            role="tab"
+                            aria-controls="home"
+                            aria-selected="true"
+                    >References</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                            class="nav-link"
+                            id="profile-tab"
+                            data-mdb-toggle="tab"
+                            href="#profile"
+                            role="tab"
+                            aria-controls="profile"
+                            aria-selected="false"
+                    >Similar articles</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                            class="nav-link"
+                            id="messages-tab"
+                            data-mdb-toggle="tab"
+                            href="#messages"
+                            role="tab"
+                            aria-controls="messages"
+                            aria-selected="false"
+                    >Cited by</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                            class="nav-link"
+                            id="settings-tab"
+                            data-mdb-toggle="tab"
+                            href="#settings"
+                            role="tab"
+                            aria-controls="settings"
+                            aria-selected="false"
+                    >Mesh Terms</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                            class="nav-link"
+                            id="publication-type-tab"
+                            data-mdb-toggle="tab"
+                            href="#settings"
+                            role="tab"
+                            aria-controls="settings"
+                            aria-selected="false"
+                    >Publication Types</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                            class="nav-link"
+                            id="grant-tab"
+                            data-mdb-toggle="tab"
+                            href="#settings"
+                            role="tab"
+                            aria-controls="settings"
+                            aria-selected="false"
+                    >Grant Support</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a
+                            class="nav-link"
+                            id="grant-tab"
+                            data-mdb-toggle="tab"
+                            href="#settings"
+                            role="tab"
+                            aria-controls="settings"
+                            aria-selected="false"
+                    >Activity</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="references" id="references">
+                        <div id="top-references-list" class="references-lists-container">
+                            <div class="refs-list">
+                                <ol id="top-references-list-1" class="references-list">
+                                    <li>
+                                        <ol class="references-and-notes-list">
+
+                                            <li class="skip-numbering" value="1">
+
+                                                Zhou P. A pneumonia outbreak associated with a new coronavirus of
+                                                probable bat origin. Nature. 2020;579:270–273.
+                                                -
+                                                <a class="reference-link"
+                                                   href="http://www.ncbi.nlm.nih.gov/pmc/articles/pmc7095418/"
+                                                   ref="linksrc=references_link&amp;ordinalpos=1"
+                                                   data-ga-category="reference" data-ga-action="PMC7095418">
+                                                    PMC
+                                                </a>
+                                                -
+                                                <a class="reference-link" href="/32015507/"
+                                                   ref="linksrc=references_link&amp;ordinalpos=2"
+                                                   data-ga-category="reference" data-ga-action="32015507">
+                                                    PubMed
+                                                </a>
+                                            </li>
+
+                                        </ol>
+                                    </li>
+                                    <li>
+                                        <ol class="references-and-notes-list">
+                                            <li class="skip-numbering" value="1">
+                                                Peiris J. Coronavirus as a possible cause of severe acute respiratory
+                                                syndrome. Lancet. 2003;361:1319–1325.
+                                                -
+                                                <a class="reference-link"
+                                                   href="http://www.ncbi.nlm.nih.gov/pmc/articles/pmc7112372/"
+                                                   ref="linksrc=references_link&amp;ordinalpos=1"
+                                                   data-ga-category="reference" data-ga-action="PMC7112372">
+                                                    PMC
+                                                </a>
+                                                -
+                                                <a class="reference-link" href="/12711465/"
+                                                   ref="linksrc=references_link&amp;ordinalpos=2"
+                                                   data-ga-category="reference" data-ga-action="12711465">
+                                                    PubMed
+                                                </a>
+                                            </li>
+
+                                        </ol>
+                                    </li>
+                                    <li>
+                                        <ol class="references-and-notes-list">
+                                            <li class="skip-numbering" value="1">
+                                                Huang C. Clinical features of patients infected with 2019 novel
+                                                coronavirus in Wuhan, China. Lancet. 2020;395:497–506.
+                                                -
+                                                <a class="reference-link"
+                                                   href="http://www.ncbi.nlm.nih.gov/pmc/articles/pmc7159299/"
+                                                   ref="linksrc=references_link&amp;ordinalpos=1"
+                                                   data-ga-category="reference" data-ga-action="PMC7159299">
+                                                    PMC
+                                                </a>
+                                                -
+                                                <a class="reference-link" href="/31986264/"
+                                                   ref="linksrc=references_link&amp;ordinalpos=2"
+                                                   data-ga-category="reference" data-ga-action="31986264">
+                                                    PubMed
+                                                </a>
+
+
+                                            </li>
+
+                                        </ol>
+                                    </li>
+
+                                    <li>
+                                        <ol class="references-and-notes-list">
+
+                                            <li class="skip-numbering" value="1">
+
+                                                WHO . WHO; 2020. Coronavirus Disease (COVID-19) Pandemic.
+
+
+                                                -
+                                                <a class="reference-link"
+                                                   href="http://www.ncbi.nlm.nih.gov/pmc/articles/pmc7306959/"
+                                                   ref="linksrc=references_link&amp;ordinalpos=1"
+                                                   data-ga-category="reference" data-ga-action="PMC7306959">
+                                                    PMC
+                                                </a>
+
+
+                                                -
+                                                <a class="reference-link" href="/32582306/"
+                                                   ref="linksrc=references_link&amp;ordinalpos=2"
+                                                   data-ga-category="reference" data-ga-action="32582306">
+                                                    PubMed
+                                                </a>
+
+
+                                            </li>
+
+                                        </ol>
+                                    </li>
+
+                                    <li>
+                                        <ol class="references-and-notes-list">
+
+                                            <li class="skip-numbering" value="1">
+
+                                                Gorbalenya A.E. The species Severe acute respiratory syndrome-related
+                                                coronavirus: classifying 2019-nCoV and naming it SARS-CoV-2. Nat.
+                                                Microbiol. 2020;5:536–544.
+
+
+                                                -
+                                                <a class="reference-link"
+                                                   href="http://www.ncbi.nlm.nih.gov/pmc/articles/pmc7095448/"
+                                                   ref="linksrc=references_link&amp;ordinalpos=1"
+                                                   data-ga-category="reference" data-ga-action="PMC7095448">
+                                                    PMC
+                                                </a>
+
+
+                                                -
+                                                <a class="reference-link" href="/32123347/"
+                                                   ref="linksrc=references_link&amp;ordinalpos=2"
+                                                   data-ga-category="reference" data-ga-action="32123347">
+                                                    PubMed
+                                                </a>
+
+
+                                            </li>
+
+                                        </ol>
+                                    </li>
+
+
+                                </ol>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    ...
+                </div>
+                <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+                    ...
+                </div>
+                <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                    ...
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 {% endblock %}

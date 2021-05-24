@@ -3,7 +3,10 @@ from collections.abc import Mapping
 
 
 class ArticleInfo:
-
+    """
+    ArticleInfo class to generate Article, Author, Journal model data from pubMed XML reponse
+    Uses articles from PubmedArticleSet/PubmedArticle items
+    """
     def __init__(self, article_dict):
         self.article_dict = article_dict
 

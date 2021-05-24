@@ -64,10 +64,11 @@ class Keyword(models.Model):
 
 
 class Tag(models.Model):
+    WikiID = models.CharField(max_length=64)
     Label = models.CharField(max_length=64)
     Description = models.TextField(max_length=1024, null=True)
     # Maybe an array field for tokens?
-    Tokens = models.TextField(max_length=1024)
+    Tokens = models.TextField(max_length=1024, null=True)
     SearchIndex = SearchVectorField(null=True)
 
     def createTSvector(self, *args, **kwargs):

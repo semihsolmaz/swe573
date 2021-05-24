@@ -7,9 +7,8 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import SearchQuery
 from tagpubDev.forms import ApplicationRegistrationForm, TagForm
-from tagpubDev.models import RegistrationApplication, UserProfileInfo, User, Article, Author
-from tagpubDev.wikiManager import getLabelSuggestion
-
+from tagpubDev.models import RegistrationApplication, UserProfileInfo, User, Article, Author, Tag
+from tagpubDev.wikiManager import getLabelSuggestion, WikiEntry
 
 def index(request):
     if request.method == 'POST':
@@ -95,13 +94,27 @@ def articleDetail(request, pk):
     article = Article.objects.get(pk=pk)
     if request.method == 'POST':
         # todo: add tag
-        pass
+        tag_form = TagForm(data=request.POST)
+        if tag_form.data['wikiLabel']:
+            tag_data = WikiEntry(tag_form.data['wikiLabel'])
+            tag, created = Tag.objects.get_or_create(WikiID=tag_data.getID(), Label=tag_data.getLabel())
+            if created:
+                tag.Description = tag_data.getDescription()
+                tag.Tokens = tag_data.getTokens()
+                tag.save()
+                tag.createTSvector()
+                article.Tags.add(tag)
+            else:
+                article.Tags.add(tag)
+            return HttpResponse(tag.Label + ' ' + tag.Description)
     else:
+        tag_form = TagForm()
         authors = Author.objects.filter(article=article)
         article_dict = {"authors": authors,
                         "title": article.Title,
                         "abstract": article.Abstract,
-                        "pmid": article.PMID
+                        "pmid": article.PMID,
+                        'tag_form': tag_form
                         }
         return render(request, 'tagpubDev/articleDetail.html', context=article_dict)
 
@@ -130,7 +143,7 @@ def tagsList(request):
         if tag_form.data['wikiLabel']:
             return HttpResponse(tag_form.data['wikiLabel'])
     else:
-        tag_form = TagForm()
+        tag_list = Tag.objects.all()
 
     return render(request, 'tagpubDev/tagList.html',
-                  {'tag_form': tag_form})
+                  {'tag_list': tag_list})

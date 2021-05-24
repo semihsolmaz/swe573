@@ -4,44 +4,25 @@
 
 {% block body_block %}
 
+    <div class="container">
+        <h3 class="lead">Used Tags</h3>
+        <table class="table table-striped">
+            <tr>
+                <th>ID</th>
+                <th>Q code</th>
+                <th>Label</th>
+                <th>Description</th>
 
-    <div class="container text-center">
-        <h3>Fill-out the form to register</h3>
-        <div class="row">
-            <div class="col-md"></div>
-            <div class="col-md form-div">
-                <form class="form_div" method="post">
-                    {% csrf_token %}
-                    {{ tag_form }}
-                    <input class="register-button" type="submit" name="" value="Register">
-                </form>
-            </div>
-            <div class="col-md"></div>
-        </div>
+            </tr>
+            {% for item in tag_list %}
+                <tr>
+                    <td><a href="{% url 'tagpubDev:articleDetail' item.id %}">{{ item.id }}</a></td>
+                    <td><a href="https://www.wikidata.org/wiki/{{ item.WikiID }}">{{ item.WikiID }}</a></td>
+                    <td>{{ item.Label }}</td>
+                    <td>{{ item.Description }}</td>
+                </tr>
+            {% endfor %}
+        </table>
     </div>
 
-    <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
-
-    {{ tag_form.media }}
-
-    <script>
-        (function ($) {
-            $('#add-form').click(function () {
-                var index = $('#id_inline_test_models-TOTAL_FORMS').val()
-                var newTable = $('#id_inline_test_models-__prefix__-DELETE').parents('table').clone()
-                newTable.find(':input').each(function () {
-                    for (attr of ['name', 'id'])
-                        $(this).attr(
-                            attr,
-                            $(this).attr(attr).replace('__prefix__', index)
-                        )
-                })
-                newTable.insertBefore($(this))
-                $('#id_inline_test_models-TOTAL_FORMS').val(
-                    parseInt($('#id_inline_test_models-TOTAL_FORMS').val()) + 1
-                )
-                newTable.slideDown()
-            })
-        })($)
-    </script>
 {% endblock %}
