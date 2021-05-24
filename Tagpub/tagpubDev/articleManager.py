@@ -56,7 +56,7 @@ class ArticleInfo:
             abstract_info = abstract_dict.get('AbstractText')
             if type(abstract_info) is str:
                 return abstract_info
-            elif type(abstract_info) is list:
+            elif type(abstract_info) is list and abstract_info:
                 abstract_text = ''
                 for item in abstract_info:
                     if type(item) is str:
