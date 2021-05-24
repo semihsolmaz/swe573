@@ -2,10 +2,10 @@ from functools import reduce
 from dal import autocomplete
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.contrib.postgres.search import SearchQuery, SearchRank
 from tagpubDev.forms import ApplicationRegistrationForm, TagForm
 from tagpubDev.models import RegistrationApplication, UserProfileInfo, User, Article, Author, Tag, Keyword
 from tagpubDev.wikiManager import getLabelSuggestion, WikiEntry
@@ -39,7 +39,7 @@ def registration(request):
                 return HttpResponse('application under review')
 
             else:
-                registration_application = registration_form.save()
+                registration_form.save()
                 return HttpResponse('applications received')
         else:
             print(registration_form.errors)
@@ -86,7 +86,7 @@ def userLogin(request):
             else:
                 return HttpResponse("Your account is not active.")
         else:
-            print("login failed username: {} and password: {}".format(username,password))
+            print("login failed username: {} and password: {}".format(username, password))
             return HttpResponse("Invalid login details")
 
     else:
@@ -137,16 +137,6 @@ def articleDetail(request, pk):
     return render(request, 'tagpubDev/articleDetail.html', context=article_dict)
 
 
-def tag_autocomplete(request):
-    if request.is_ajax():
-        # wiki_query = request.GET.get('tag_query', '')
-        tags = ['kamil', 'kazım', 'manda']
-        data = {
-            'tags': tags,
-        }
-    return JsonResponse(data)
-
-
 class TagAutocomplete(autocomplete.Select2ListView):
 
     def get_list(self):
@@ -155,13 +145,8 @@ class TagAutocomplete(autocomplete.Select2ListView):
 
 
 def tagsList(request):
-    if request.method == 'POST':
-        tag_form = TagForm(data=request.POST)
-        print(tag_form.data['wikiLabel'])
-        if tag_form.data['wikiLabel']:
-            return HttpResponse(tag_form.data['wikiLabel'])
-    else:
-        tag_list = Tag.objects.all()
+
+    tag_list = Tag.objects.all()
 
     return render(request, 'tagpubDev/tagList.html',
                   {'tag_list': tag_list})
