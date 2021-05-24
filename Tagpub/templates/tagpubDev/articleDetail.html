@@ -27,7 +27,35 @@
             <p class="fw-bold">Abstract</p>
             <p>{{ abstract }}</p>
             <p class="fw-bold">Keywords</p>
-            <p>COVID-19; SARS, SARS-CoV-2; coronavirus; severe acute respiratory syndrome.</p>
+            <p>{{ keywords }}</p>
+            <hr>
+            <p class="fw-bold">Tags</p>
+            <table class="table table-striped">
+                <tr>
+                    <th>ID</th>
+                    <th>Q code</th>
+                    <th>Label</th>
+                    <th>Description</th>
+                    <th>Remove</th>
+
+                </tr>
+                {% for item in tags %}
+                    <tr>
+                        <td><a href="{% url 'tagpubDev:articleDetail' item.id %}">{{ item.id }}</a></td>
+                        <td><a href="https://www.wikidata.org/wiki/{{ item.WikiID }}">{{ item.WikiID }}</a></td>
+                        <td>{{ item.Label }}</td>
+                        <td>{{ item.Description }}</td>
+                        <td>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{ item.id }}" name="tag_id">
+                                <button type="Submit">X</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <hr>
             <div class="container-fluid py-4">
                 <form class="tagForm" method="post">
                     {% csrf_token %}
