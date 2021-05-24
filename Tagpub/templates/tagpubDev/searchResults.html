@@ -9,7 +9,7 @@
             <tr>
                 <th>ID</th>
                 <th>Title</th>
-{#                <th>Authors</th>#}
+                {#                <th>Authors</th>#}
                 <th>Date</th>
 
             </tr>
@@ -17,11 +17,33 @@
                 <tr>
                     <td><a href="{% url 'tagpubDev:articleDetail' item.id %}">{{ item.id }}</a></td>
                     <td>{{ item.Title }}</td>
-{#                    <td>{{ item.Authors }}</td>#}
+                    {#                    <td>{{ item.Authors }}</td>#}
                     <td>{{ item.PublicationDate }}</td>
                 </tr>
             {% endfor %}
         </table>
+
+        {% if results_list.has_other_pages %}
+            <ul class="pagination">
+                {% if results_list.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ results_list.previous_page_number }}&term={{ search_term }}">&laquo;</a></li>
+                {% else %}
+                    <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
+                {% endif %}
+                {% for i in results_list.paginator.page_range %}
+                    {% if results_list.number == i %}
+                        <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}&term={{ search_term }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if results_list.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ results_list.next_page_number }}&term={{ search_term }}">&raquo;</a></li>
+                {% else %}
+                    <li class="disabled page-item"><span>&raquo;</span></li>
+                {% endif %}
+            </ul>
+        {% endif %}
     </div>
 
 {% endblock %}

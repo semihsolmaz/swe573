@@ -10,6 +10,7 @@ from tagpubDev.forms import ApplicationRegistrationForm, TagForm
 from tagpubDev.models import RegistrationApplication, UserProfileInfo, User, Article, Author, Tag, Keyword
 from tagpubDev.wikiManager import getLabelSuggestion, WikiEntry
 from django.db.models import F
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 # todo normalize ranking for tag and article search results before union and order results after union
@@ -24,11 +25,47 @@ def index(request):
             filter(Tags__SearchIndex=search_query).\
             annotate(rank=SearchRank(F('SearchIndex'), search_query))
         results_list = (tag_search_results | article_search_results).distinct().order_by('-rank')
+        page = request.POST.get('page', 1)
+        paginator = Paginator(results_list, 25)
+        search_str = request.POST.get('searchTerms')
+        try:
+            results = paginator.page(page)
+        except PageNotAnInteger:
+            results = paginator.page(1)
+        except EmptyPage:
+            results = paginator.page(paginator.num_pages)
         # results_list = (article_search_results | tag_search_results).distinct().order_by('-rank')
-        results_dict = {"results_list": results_list}
+        results_dict = {"results_list": results,
+                        "search_term" : search_str
+                        }
         return render(request, 'tagpubDev/searchResults.html', context=results_dict)
     else:
-        return render(request, 'tagpubDev/index.html')
+        if request.GET.get('page', False):
+            page = request.GET.get('page')
+            search_terms = [SearchQuery(term, ) for term in request.GET.get('term').split(",")]
+            search_query = reduce(lambda x, y: x & y, search_terms)
+            article_search_results = Article.objects. \
+                filter(SearchIndex=search_query). \
+                annotate(rank=SearchRank(F('SearchIndex'), search_query))
+            tag_search_results = Article.objects. \
+                filter(Tags__SearchIndex=search_query). \
+                annotate(rank=SearchRank(F('SearchIndex'), search_query))
+            results_list = (tag_search_results | article_search_results).distinct().order_by('-rank')
+            paginator = Paginator(results_list, 25)
+            search_str = request.GET.get('term')
+            try:
+                results = paginator.page(page)
+            except PageNotAnInteger:
+                results = paginator.page(1)
+            except EmptyPage:
+                results = paginator.page(paginator.num_pages)
+            # results_list = (article_search_results | tag_search_results).distinct().order_by('-rank')
+            results_dict = {"results_list": results,
+                            "search_term": search_str
+                            }
+            return render(request, 'tagpubDev/searchResults.html', context=results_dict)
+        else:
+            return render(request, 'tagpubDev/index.html')
 
 
 def registration(request):

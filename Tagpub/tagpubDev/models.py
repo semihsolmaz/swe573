@@ -48,7 +48,7 @@ class Journal(models.Model):
 class Author(models.Model):
 
     LastName = models.CharField(max_length=128)
-    ForeName = models.CharField(max_length=128)
+    ForeName = models.CharField(max_length=128, null=True)
     Initials = models.CharField(max_length=8)
 
     def __str__(self):
