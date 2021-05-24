@@ -1,22 +1,30 @@
 from functools import reduce
 from dal import autocomplete
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.contrib.postgres.search import SearchQuery
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from tagpubDev.forms import ApplicationRegistrationForm, TagForm
 from tagpubDev.models import RegistrationApplication, UserProfileInfo, User, Article, Author, Tag, Keyword
 from tagpubDev.wikiManager import getLabelSuggestion, WikiEntry
+from django.db.models import F
 
 
+# todo normalize ranking for tag and article search results before union and order results after union
 def index(request):
     if request.method == 'POST':
         search_terms = [SearchQuery(term, ) for term in request.POST.get('searchTerms').split(",")]
         search_query = reduce(lambda x, y: x & y, search_terms)
-
-        results_list = Article.objects.filter(SearchIndex=search_query)
+        article_search_results = Article.objects.\
+            filter(SearchIndex=search_query).\
+            annotate(rank=SearchRank(F('SearchIndex'), search_query))
+        tag_search_results = Article.objects.\
+            filter(Tags__SearchIndex=search_query).\
+            annotate(rank=SearchRank(F('SearchIndex'), search_query))
+        results_list = (tag_search_results | article_search_results).distinct().order_by('-rank')
+        # results_list = (article_search_results | tag_search_results).distinct().order_by('-rank')
         results_dict = {"results_list": results_list}
         return render(request, 'tagpubDev/searchResults.html', context=results_dict)
     else:
