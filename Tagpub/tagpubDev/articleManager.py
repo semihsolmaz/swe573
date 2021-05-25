@@ -59,14 +59,15 @@ class ArticleInfo:
             elif type(abstract_info) is list and abstract_info:
                 abstract_text = ''
                 for item in abstract_info:
-                    if type(item) is str:
-                        abstract_text += item + '\n'
-                    elif item.get('@Label') and item.get('#text'):
-                        abstract_text += item.get('@Label') + '\n' + item.get('#text') + '\n'
-                    elif item.get('#text'):
-                        abstract_text += item.get('#text') + '\n'
-                    else:
-                        pass
+                    if item:
+                        if type(item) is str:
+                            abstract_text += item + '\n'
+                        elif item.get('@Label') and item.get('#text'):
+                            abstract_text += item.get('@Label') + '\n' + item.get('#text') + '\n'
+                        elif item.get('#text'):
+                            abstract_text += item.get('#text') + '\n'
+                        else:
+                            pass
                 return abstract_text
             elif abstract_info:
                 return abstract_info.get('#text')
