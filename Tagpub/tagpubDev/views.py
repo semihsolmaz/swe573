@@ -9,21 +9,25 @@ from django.contrib.postgres.search import SearchQuery, SearchRank
 from tagpubDev.forms import ApplicationRegistrationForm, TagForm
 from tagpubDev.models import RegistrationApplication, UserProfileInfo, User, Article, Author, Tag, Keyword
 from tagpubDev.wikiManager import getLabelSuggestion, WikiEntry
-from django.db.models import F
+from django.db.models import F, CharField, Value
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 # todo normalize ranking for tag and article search results before union and order results after union
 def index(request):
     if request.method == 'POST':
-        search_terms = [SearchQuery(term, ) for term in request.POST.get('searchTerms').split(",")]
-        search_query = reduce(lambda x, y: x & y, search_terms)
+        search_terms = [SearchQuery(term, search_type='phrase') for term in request.POST.get('searchTerms').split(",")]
+        article_search_query = reduce(lambda x, y: x & y, search_terms)
+        # todo: Change tag search logic to search for each term and get intersection results
+        tag_search_query = reduce(lambda x, y: x | y, search_terms)
+        # todo: Normalize tag and article result rank values
         article_search_results = Article.objects.\
-            filter(SearchIndex=search_query).\
-            annotate(rank=SearchRank(F('SearchIndex'), search_query))
+            filter(SearchIndex=article_search_query).\
+            annotate(rank=SearchRank(F('SearchIndex'), article_search_query))
         tag_search_results = Article.objects.\
-            filter(Tags__SearchIndex=search_query).\
-            annotate(rank=SearchRank(F('SearchIndex'), search_query))
+            filter(Tags__SearchIndex=tag_search_query).\
+            annotate(rank=SearchRank(F('SearchIndex'), tag_search_query))
+        # todo: Don't union, do group by instead and process annotations
         results_list = (tag_search_results | article_search_results).distinct().order_by('-rank')
         page = request.POST.get('page', 1)
         paginator = Paginator(results_list, 25)
@@ -43,13 +47,14 @@ def index(request):
         if request.GET.get('page', False):
             page = request.GET.get('page')
             search_terms = [SearchQuery(term, ) for term in request.GET.get('term').split(",")]
-            search_query = reduce(lambda x, y: x & y, search_terms)
+            article_search_query = reduce(lambda x, y: x & y, search_terms)
+            tag_search_query = reduce(lambda x, y: x | y, search_terms)
             article_search_results = Article.objects. \
-                filter(SearchIndex=search_query). \
-                annotate(rank=SearchRank(F('SearchIndex'), search_query))
+                filter(SearchIndex=article_search_query). \
+                annotate(rank=SearchRank(F('SearchIndex'), article_search_query))
             tag_search_results = Article.objects. \
-                filter(Tags__SearchIndex=search_query). \
-                annotate(rank=SearchRank(F('SearchIndex'), search_query))
+                filter(Tags__SearchIndex=tag_search_query). \
+                annotate(rank=SearchRank(F('SearchIndex'), tag_search_query))
             results_list = (tag_search_results | article_search_results).distinct().order_by('-rank')
             paginator = Paginator(results_list, 25)
             search_str = request.GET.get('term')
