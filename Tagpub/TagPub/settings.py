@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'dal',
     'dal_select2',
+    'coverage',
 ]
 
 MIDDLEWARE = [
@@ -85,14 +86,14 @@ WSGI_APPLICATION = 'TagPub.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'tagpub',
-        'USER': 'tagpubuser',
-        'PASSWORD': 'tag147pub852',
-        'HOST': 'db',
-#         'NAME': 'dev',
-#         'USER': 'postgres',
-#         'PASSWORD': 'Asd1478965',
-#         'HOST': '127.0.0.1',
+        # 'NAME': 'tagpub',
+        # 'USER': 'tagpubuser',
+        # 'PASSWORD': 'tag147pub852',
+        # 'HOST': 'db',
+        'NAME': 'dev',
+        'USER': 'postgres',
+        'PASSWORD': 'Asd1478965',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
