@@ -1,12 +1,12 @@
 from django.test import TestCase
 from django.utils import timezone
 from django.contrib.postgres.search import SearchQuery
-
+from django.urls import reverse
 from tagpubDev.models import Article, Author, Journal, RegistrationApplication, Tag, Keyword
 
 
 # models tests
-class ModelTest(TestCase):
+class Test(TestCase):
 
     def create_author(self, LastName="Testsurname", ForeName="Testname", Initials="tt"):
         return Author.objects.create(LastName=LastName, ForeName=ForeName, Initials=Initials)
@@ -114,3 +114,33 @@ class ModelTest(TestCase):
         self.assertTrue(Article.objects.filter(SearchIndex=SearchQuery('implications for organogenesis', search_type='phrase')).exists())
         # Check tagging
         self.assertTrue(Article.objects.filter(Tags__SearchIndex=SearchQuery('SLE', search_type='phrase')).exists())
+
+    # view tests
+    def test_registration_view(self):
+        url = reverse("tagpubDev:registration")
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 200)
+        # self.assertIn(w.title, resp.content)
+
+    def test_registrationRequests_view(self):
+        reg_request = self.create_registration()
+        url = reverse("tagpubDev:registrationRequests")
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn(reg_request.name, resp.content.decode('utf-8'))
+
+    def test_login_view(self):
+        url = reverse("tagpubDev:user_login")
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 200)
+
+    def test_articleDetail_view(self):
+        article = self.create_article()
+        url = reverse("tagpubDev:articleDetail", args=[1])
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn(article.Title, resp.content.decode('utf-8'))

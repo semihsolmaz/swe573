@@ -143,7 +143,7 @@ class ArticleInfo:
 
     # todo: Get references of the article
     # def getReferences(self):
-    # https: // eutils.ncbi.nlm.nih.gov / entrez / eutils / elink.fcgi?dbfrom = pmc & linkname = pmc_refs_pubmed & id = 4423606
+    # https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pmc&linkname=pmc_refs_pubmed&id=4423606
 
     # todo: Get how many times article is cited etc.
     # def getArticleMetrics:
