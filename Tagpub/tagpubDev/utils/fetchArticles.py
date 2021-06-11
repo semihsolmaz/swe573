@@ -1,7 +1,7 @@
 from django.db.utils import IntegrityError
 from Bio import Entrez
 import xmltodict
-from tagpubDev.articleManager import ArticleInfo
+from tagpubDev.utils.articleManager import ArticleInfo
 from tagpubDev.models import Journal, Author, Article, Keyword
 # from background_task import background
 
