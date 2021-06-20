@@ -64,6 +64,7 @@ class Keyword(models.Model):
 
 
 class Tag(models.Model):
+    TagName = models.CharField(max_length=64)
     WikiID = models.CharField(max_length=64)
     Label = models.CharField(max_length=64)
     Description = models.TextField(max_length=1024, null=True)
@@ -100,16 +101,6 @@ class Article(models.Model):
     Tokens = models.TextField(max_length=100000)
 
     SearchIndex = SearchVectorField(null=True)
-        # [
-        # tsvector_field.WeightedColumn('PMID', 'A'),
-        # # tsvector_field.WeightedColumn('Authors', 'A'),
-        # # tsvector_field.WeightedColumn('Keywords', 'A'),
-        # tsvector_field.WeightedColumn('Title', 'A'),
-        # # tsvector_field.WeightedColumn('Journal', 'C'),
-        # # tsvector_field.WeightedColumn('PublicationDate', 'B'),
-        # tsvector_field.WeightedColumn('Abstract', 'B'),
-        # tsvector_field.WeightedColumn('Tokens', 'D'),
-    # ], 'english')
 
     def createTSvector(self, *args, **kwargs):
         self.SearchIndex = (
@@ -124,4 +115,19 @@ class Article(models.Model):
         return self.Title
 
 
+# class Article(models.Model):
+#
+#     ActorType = models.CharField(max_length=16)
+#     ActorID = models.TextField(max_length=512)
+#     ActorName = models.TextField(max_length=5000, null=True)
+#     PublicationDate = models.DateField(null=True)
+#
+#     Journal = models.ForeignKey(Journal, on_delete=models.PROTECT, null=True)
+#     Keywords = models.ManyToManyField(Keyword)
+#     Authors = models.ManyToManyField(Author)
+#     Tags = models.ManyToManyField(Tag)
+#
+#
+#     def __str__(self):
+#         return self.Title
 

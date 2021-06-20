@@ -34,6 +34,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Q code</th>
+                    <th>System Name</th>
                     <th>Label</th>
                     <th>Description</th>
                     <th>Remove</th>
@@ -43,6 +44,7 @@
                     <tr>
                         <td><a href="{% url 'tagpubDev:articleDetail' item.id %}">{{ item.id }}</a></td>
                         <td><a href="https://www.wikidata.org/wiki/{{ item.WikiID }}">{{ item.WikiID }}</a></td>
+                        <td>{{ item.TagName }}</td>
                         <td>{{ item.Label }}</td>
                         <td>{{ item.Description }}</td>
                         <td>
@@ -61,9 +63,44 @@
                     {% csrf_token %}
                     {{ tag_form|crispy }}
                     <div id="searchHelp" class="form-text">Search for wikidata entry using labels or Q codes</div>
-                    <input class="register-button" type="submit" name="add_tag" value="Add Tag">
+                    <input class="register-button" type="submit" name="get_tag" value="Get Tag">
 
                 </form>
+                {% if qid %}
+                    <p>Click on an existing tag to use it.</p>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Existing Tags</th>
+                        </tr>
+                        {% for item in existing_tags %}
+                            <tr>
+                                <td class="tag_name">{{ item.TagName }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <div class="container-fluid">
+                        <form method="post">
+                            {% csrf_token %}
+                            <label for="tag_name">Tag Name:</label>
+                            <input id="tag_name" type="text" name="tag_name" required>
+                            <p></p>
+                            <label for="qid">Entry ID:</label>
+                            <input type="text" name="qid" value="{{ qid }}" readonly>
+                            <p></p>
+                            <label for="label">Label:</label>
+                            <textarea type="text" name="label" cols="80" rows="1" readonly>{{ label }}</textarea>
+                            <p></p>
+                            <label for="description">Description:</label>
+                            <textarea type="text" name="description" cols="80" rows="5"
+                                      readonly>{{ description }}</textarea>
+                            <p></p>
+                            <div id="searchHelp" class="form-text">Save and add tag</div>
+                            <input class="register-button" type="submit" name="add_tag" value="Add Tag">
+
+                        </form>
+                    </div>
+
+                {% endif %}
             </div>
 
             <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>

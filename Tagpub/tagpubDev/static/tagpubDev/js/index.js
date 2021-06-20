@@ -5,6 +5,9 @@ function checkEnter(e) {
     return txtArea || (e.keyCode || e.which || e.charCode || 0) !== 13;
 }
 
+$(".tag_name").click(function () {
+    $("#tag_name")[0].value = $(this).text();
+})
 
 
 $(".confirm_action").click(function () {

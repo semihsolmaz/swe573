@@ -1,15 +1,12 @@
-# from functools import reduce
 from dal import autocomplete
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-# from django.contrib.postgres.search import SearchQuery, SearchRank
 from tagpubDev.forms import ApplicationRegistrationForm, TagForm
 from tagpubDev.models import RegistrationApplication, UserProfileInfo, User, Article, Author, Tag, Keyword
 from tagpubDev.utils.wikiManager import getLabelSuggestion, WikiEntry
-# from django.db.models import F, Sum, Q
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from tagpubDev.utils.data import SearchResult
 
@@ -17,19 +14,6 @@ from tagpubDev.utils.data import SearchResult
 def index(request):
     if request.method == 'POST':
         search_terms = request.POST.get('searchTerms').split(",")
-        # # todo: Remove data operations to another file
-        # article_search_query = reduce(lambda x, y: x & y, search_terms)
-        # # todo: Change tag search logic to search for each term and get intersection results
-        # tag_search_query = reduce(lambda x, y: x | y, search_terms)
-        #
-        # results_list = Article.objects.\
-        #     filter(Q(SearchIndex=article_search_query) | Q(Tags__SearchIndex=tag_search_query)).\
-        #     values('id', 'PMID', 'Title', 'PublicationDate').\
-        #     annotate(a_rank=SearchRank(F('SearchIndex'), article_search_query)).\
-        #     annotate(t_rank=SearchRank(F('Tags__SearchIndex'), tag_search_query)).\
-        #     annotate(rank=(F('a_rank') + F('t_rank'))).values('id', 'Title', 'PublicationDate').\
-        #     annotate(a_rank=Sum('a_rank'), t_rank=Sum('t_rank'), rank=Sum('rank')).\
-        #     order_by(F('rank').desc(nulls_last=True), F('t_rank').desc(nulls_last=True), F('a_rank').desc(nulls_last=True))
 
         search = SearchResult(search_terms)
         results_list = search.getSearchResults()
@@ -43,7 +27,6 @@ def index(request):
             results = paginator.page(1)
         except EmptyPage:
             results = paginator.page(paginator.num_pages)
-        # results_list = (article_search_results | tag_search_results).distinct().order_by('-rank')
 
         date_data = search.getYearlyArticleCounts()
 
@@ -68,7 +51,6 @@ def index(request):
                 results = paginator.page(1)
             except EmptyPage:
                 results = paginator.page(paginator.num_pages)
-            # results_list = (article_search_results | tag_search_results).distinct().order_by('-rank')
             results_dict = {"results_list": results,
                             "search_term": search_str
                             }
@@ -141,13 +123,20 @@ def userLogin(request):
 
 def userList(request):
     if request.method == 'POST':
-        removed_user = User.objects.get(pk=request.POST['user_id'])
-        removed_user.is_active = False
-        removed_user.save()
+        if 'user_id' in request.POST:
+            removed_user = User.objects.get(pk=request.POST['user_id'])
+            removed_user.is_active = False
+            removed_user.save()
+        elif 'admin_status' in request.POST:
+            admin_user = User.objects.get(pk=request.POST['admin_status'])
+            admin_user.userprofileinfo.adminStatus = not admin_user.userprofileinfo.adminStatus
+            admin_user.userprofileinfo.save()
 
     users = User.objects.filter(is_active=True)
-
-    return render(request, 'tagpubDev/userList.html', {'user_list': users})
+    cur_username = request.user.username
+    admin_status = User.objects.filter(username=cur_username).values_list('userprofileinfo__adminStatus')
+    print(admin_status[0][0])
+    return render(request, 'tagpubDev/userList.html', {'user_list': users, 'admin': admin_status[0][0]})
 
 
 def userProfile(request):
@@ -169,20 +158,26 @@ def userLogout(request):
 
 def articleDetail(request, pk):
     article = Article.objects.get(pk=pk)
+    wiki_info = {}
     if request.method == 'POST':
-        if 'add_tag' in request.POST:
+        if 'get_tag' in request.POST:
             tag_form = TagForm(data=request.POST)
-            if tag_form.data['wikiLabel']:
-                tag_data = WikiEntry(tag_form.data['wikiLabel'])
-                tag, created = Tag.objects.get_or_create(WikiID=tag_data.getID(), Label=tag_data.getLabel())
-                if created:
-                    tag.Description = tag_data.getDescription()
-                    tag.Tokens = tag_data.getTokens()
-                    tag.save()
-                    tag.createTSvector()
-                    article.Tags.add(tag)
-                else:
-                    article.Tags.add(tag)
+            tag_data = WikiEntry(tag_form.data['wikiLabel'])
+            wiki_info['qid'] = tag_data.getID()
+            wiki_info['label'] = tag_data.getLabel()
+            wiki_info['description'] = tag_data.getDescription()
+            wiki_info['existing_tags'] = Tag.objects.filter(WikiID=tag_data.getID())
+        elif 'add_tag' in request.POST:
+            tag_data = WikiEntry(request.POST['qid'])
+            tag, created = Tag.objects.get_or_create(WikiID=tag_data.getID(), Label=tag_data.getLabel(), TagName=request.POST['tag_name'])
+            if created:
+                tag.Description = tag_data.getDescription()
+                tag.Tokens = tag_data.getTokens()
+                tag.save()
+                tag.createTSvector()
+                article.Tags.add(tag)
+            else:
+                article.Tags.add(tag)
         elif 'tag_id' in request.POST:
             tag = Tag.objects.get(pk=request.POST['tag_id'])
             print(request.POST['tag_id'])
@@ -201,6 +196,8 @@ def articleDetail(request, pk):
                     "keywords": keywords_list,
                     "tags": tags
                     }
+
+    article_dict.update(wiki_info)
 
     return render(request, 'tagpubDev/articleDetail.html', context=article_dict)
 

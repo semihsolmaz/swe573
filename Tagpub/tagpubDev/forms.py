@@ -17,3 +17,4 @@ class TagForm(forms.Form):
         label="Search Wikidata Entry"
     )
 
+
