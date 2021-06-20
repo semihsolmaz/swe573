@@ -4,12 +4,17 @@ import xmltodict
 from tagpubDev.utils.articleManager import ArticleInfo
 from tagpubDev.models import Journal, Author, Article, Keyword
 # from background_task import background
+import environ
+
+
+env = environ.Env()
+environ.Env.read_env()
 
 
 # @background(schedule=60)
 def createArticles(term, max_article):
-    Entrez.api_key = '2ed33cae73fa40c55df3b96dc4e7f6598209'
-    Entrez.email = "semihsolmaz@hotmail.com"
+    Entrez.api_key = env('ENTREZ_API_KEY')
+    Entrez.email = env('ENTREZ_EMAIL')
 
     search_handle = Entrez.esearch(db="pubmed", term=term, retmax=max_article)
     record = Entrez.read(search_handle)

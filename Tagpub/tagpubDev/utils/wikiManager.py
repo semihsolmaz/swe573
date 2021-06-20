@@ -1,11 +1,4 @@
-# from wikidata.client import Client
 import requests
-# import json
-
-# cli = Client()
-# tag = cli.get('Q1073', load=True,)
-# tag = requests.get('https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q155&languages=en&format=json')
-# tag_dict = tag.json()
 
 
 class WikiEntry:
@@ -80,8 +73,3 @@ def getLabelSuggestion(term):
 
     return suggestions
 
-# entry = WikiEntry('Q1073')
-# print(entry.getID())
-# print(entry.getLabel())
-# print(entry.getDescription())
-# print(entry.getTokens())
