@@ -1,0 +1,36 @@
+{% extends 'tagpubDev/base.html' %}
+{% load static %}
+
+{% block body_block %}
+
+    <div class="container">
+        <h3 class="lead">Users</h3>
+        <table class="table table-striped">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Remove</th>
+
+            </tr>
+            {% for item in user_list %}
+                <tr>
+                    {#                    <td><a href="{% url 'tagpubDev:articleDetail' item.id %}">{{ item.id }}</a></td>#}
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.first_name }}</td>
+                    <td>{{ item.last_name }}</td>
+                    <td>{{ item.email }}</td>
+                    <td>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{ item.id }}" name="user_id">
+                            <button class="confirm_action" type="Submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}

@@ -19,12 +19,14 @@
             integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
             crossorigin="anonymous"></script>
 
-     <!-- JQuery-->
+    <!-- JQuery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!--Chart js-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+            integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css"
+          integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous"/>
 
     <!--Font Awesome library-->
     <script src="https://kit.fontawesome.com/f405fd37c0.js" crossorigin="anonymous"></script>
@@ -57,23 +59,27 @@
                     <li>
                         <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                     </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'tagpubDev:userList' %}">Users</a>
+                    </li>
                 {% else %}
                     <li>
-                        <a class="nav-link" href="{% url 'tagpubDev:user_login' %}">Login</a>
+                        <a class="nav-link" href="{% url 'tagpubDev:userLogin' %}">Login</a>
                     </li>
                     <li>
                         <a class="nav-link" href="{% url 'tagpubDev:registration' %}">Register</a>
                     </li>
                 {% endif %}
 
-                <!--                <li class="nav-item dropdown">-->
-                <!--                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>-->
-                <!--                    <ul class="dropdown-menu" aria-labelledby="dropdown04">-->
-                <!--                        <li><a class="dropdown-item" href="#">Action</a></li>-->
-                <!--                        <li><a class="dropdown-item" href="#">Another action</a></li>-->
-                <!--                        <li><a class="dropdown-item" href="#">Something else here</a></li>-->
-                <!--                    </ul>-->
-                <!--                </li>-->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown"
+                       aria-expanded="false">Dropdown</a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown04">
+                        <li><a class="dropdown-item" href="{% url 'tagpubDev:userProfile' %}">Profile</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
             </ul>
             <!--            <form>-->
             <!--                <input class="form-control" type="text" placeholder="Search" aria-label="Search">-->

@@ -49,7 +49,7 @@
                             <form method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" value="{{ item.id }}" name="tag_id">
-                                <button type="Submit">X</button>
+                                <button class="confirm_action" type="Submit">X</button>
                             </form>
                         </td>
                     </tr>

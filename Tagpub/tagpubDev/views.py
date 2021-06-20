@@ -1,19 +1,19 @@
-from functools import reduce
+# from functools import reduce
 from dal import autocomplete
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.contrib.postgres.search import SearchQuery, SearchRank
+# from django.contrib.postgres.search import SearchQuery, SearchRank
 from tagpubDev.forms import ApplicationRegistrationForm, TagForm
 from tagpubDev.models import RegistrationApplication, UserProfileInfo, User, Article, Author, Tag, Keyword
 from tagpubDev.utils.wikiManager import getLabelSuggestion, WikiEntry
-from django.db.models import F, Sum, Q
+# from django.db.models import F, Sum, Q
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from tagpubDev.utils.data import SearchResult
 
-# todo normalize ranking for tag and article search results before union and order results after union
+
 def index(request):
     if request.method == 'POST':
         search_terms = request.POST.get('searchTerms').split(",")
@@ -31,7 +31,8 @@ def index(request):
         #     annotate(a_rank=Sum('a_rank'), t_rank=Sum('t_rank'), rank=Sum('rank')).\
         #     order_by(F('rank').desc(nulls_last=True), F('t_rank').desc(nulls_last=True), F('a_rank').desc(nulls_last=True))
 
-        results_list = SearchResult(search_terms).getSearchResults()
+        search = SearchResult(search_terms)
+        results_list = search.getSearchResults()
 
         page = request.POST.get('page', 1)
         paginator = Paginator(results_list, 25)
@@ -44,10 +45,12 @@ def index(request):
             results = paginator.page(paginator.num_pages)
         # results_list = (article_search_results | tag_search_results).distinct().order_by('-rank')
 
-
+        date_data = search.getYearlyArticleCounts()
 
         results_dict = {"results_list": results,
-                        "search_term": search_str
+                        "search_term": search_str,
+                        "date_labels": date_data.keys(),
+                        "data_values": date_data.values()
                         }
         return render(request, 'tagpubDev/searchResults.html', context=results_dict)
     else:
@@ -136,10 +139,32 @@ def userLogin(request):
         return render(request, 'tagpubDev/login.html', {})
 
 
+def userList(request):
+    if request.method == 'POST':
+        removed_user = User.objects.get(pk=request.POST['user_id'])
+        removed_user.is_active = False
+        removed_user.save()
+
+    users = User.objects.filter(is_active=True)
+
+    return render(request, 'tagpubDev/userList.html', {'user_list': users})
+
+
+def userProfile(request):
+    if request.method == 'POST':
+        username = request.user.username
+        password = request.POST.get('password')
+        user = User.objects.get(username=username)
+        user.set_password(password)
+        user.save()
+
+    return render(request, 'tagpubDev/userProfile.html', {})
+
+
 @login_required
 def userLogout(request):
     logout(request)
-    return HttpResponseRedirect(reverse('tagpubDev:index'))
+    return HttpResponseRedirect(reverse('tagpubDev:userLogin'))
 
 
 def articleDetail(request, pk):
