@@ -64,7 +64,7 @@ class Keyword(models.Model):
 
 
 class Tag(models.Model):
-    TagName = models.CharField(max_length=64)
+    TagName = models.CharField(max_length=64, default='noname')
     WikiID = models.CharField(max_length=64)
     Label = models.CharField(max_length=64)
     Description = models.TextField(max_length=1024, null=True)
