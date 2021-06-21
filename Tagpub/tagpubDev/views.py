@@ -78,7 +78,7 @@ def registration(request):
                   {'registration_form': registration_form})
 
 
-# todo: create password and send email
+@login_required
 def registrationRequests(request):
     if request.method == 'POST':
         approved_request = RegistrationApplication.objects.get(pk=request.POST['request_id'])
@@ -121,6 +121,7 @@ def userLogin(request):
         return render(request, 'tagpubDev/login.html', {})
 
 
+@login_required
 def userList(request):
     if request.method == 'POST':
         if 'user_id' in request.POST:
@@ -155,7 +156,7 @@ def userLogout(request):
     logout(request)
     return HttpResponseRedirect(reverse('tagpubDev:userLogin'))
 
-
+@login_required
 def articleDetail(request, pk):
     article = Article.objects.get(pk=pk)
     wiki_info = {}
@@ -208,7 +209,7 @@ class TagAutocomplete(autocomplete.Select2ListView):
         taglist = getLabelSuggestion(self.q)
         return taglist
 
-
+@login_required
 def tagsList(request):
 
     tag_list = Tag.objects.all()

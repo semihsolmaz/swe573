@@ -143,6 +143,6 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_URL = '/tagpubDev/userLogin/'
+LOGIN_URL = '/tagpub/userLogin/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
