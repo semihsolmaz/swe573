@@ -14,7 +14,6 @@ class SearchResult:
         self.search_terms = search_terms
         self.search_queries = [SearchQuery(term, search_type='phrase') for term in self.search_terms]
         self.article_search_query = reduce(lambda x, y: x & y, self.search_queries)
-        # todo: Change tag search logic to search for each term and get intersection results
         self.tag_search_query = reduce(lambda x, y: x | y, self.search_queries)
         self.result_list = Article.objects.\
             filter(Q(SearchIndex=self.article_search_query) | Q(Tags__SearchIndex=self.tag_search_query))

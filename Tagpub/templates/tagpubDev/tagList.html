@@ -8,6 +8,7 @@
         <table class="table table-striped">
             <tr>
                 <th>ID</th>
+                <th>Tag Name</th>
                 <th>Q code</th>
                 <th>Label</th>
                 <th>Description</th>
@@ -15,7 +16,8 @@
             </tr>
             {% for item in tag_list %}
                 <tr>
-                    <td><a href="{% url 'tagpubDev:articleDetail' item.id %}">{{ item.id }}</a></td>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.TagName }}</td>
                     <td><a href="https://www.wikidata.org/wiki/{{ item.WikiID }}">{{ item.WikiID }}</a></td>
                     <td>{{ item.Label }}</td>
                     <td>{{ item.Description }}</td>

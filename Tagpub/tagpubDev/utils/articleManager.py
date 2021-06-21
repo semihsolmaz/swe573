@@ -139,7 +139,7 @@ class ArticleInfo:
                 tokens.append(value)
 
         iterateArticleData(clean_dict)
-        return ' '.join(tokens)
+        return '. '.join(tokens)
 
     # todo: Get references of the article
     # def getReferences(self):
