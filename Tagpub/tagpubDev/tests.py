@@ -1,8 +1,12 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.utils import timezone
 from django.contrib.postgres.search import SearchQuery
 from django.urls import reverse
 from tagpubDev.models import Article, Author, Journal, RegistrationApplication, Tag, Keyword
+
+
+client = Client()
+client.login(username="admin@tagpub.com", password="123456")
 
 
 # models tests
@@ -132,7 +136,7 @@ class Test(TestCase):
         self.assertIn(reg_request.name, resp.content.decode('utf-8'))
 
     def test_login_view(self):
-        url = reverse("tagpubDev:user_login")
+        url = reverse("tagpubDev:userLogin")
         resp = self.client.get(url)
 
         self.assertEqual(resp.status_code, 200)
